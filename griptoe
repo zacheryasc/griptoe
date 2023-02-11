@@ -1,0 +1,17 @@
+#!/bin/bash
+#
+# Entrypoint for interaction with the monorepo
+#
+
+# Setup for installing dependancies on a fresh system
+system-setup() {
+	echo "Running setup script..." > /dev/tty
+	scripts/system_setup.sh
+}
+
+
+if (return 0 2>/dev/null); then
+    echo sourced
+else
+    $@
+fi
