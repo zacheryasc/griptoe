@@ -9,6 +9,10 @@ system-setup() {
 	scripts/system_setup.sh
 }
 
+rust-cli() {
+    cargo run $@
+}
+
 
 if (return 0 2>/dev/null); then
     echo sourced

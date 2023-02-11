@@ -1,3 +1,5 @@
+use clap::Parser;
+
 fn main() {
-  println!("hello world")
+    griptoe_cli::run(griptoe_cli::Command::parse()).unwrap()
 }

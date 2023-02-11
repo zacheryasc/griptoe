@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use super::types::Pubkey;
 
-#[derive(Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct CosmosAccount {
     pub name: String,
     pub derivation_hint: String,
@@ -10,26 +10,27 @@ pub struct CosmosAccount {
     pub assets: Vec<CosmosAsset>,
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize)]
 #[serde(tag = "type")]
 pub enum CosmosAsset {
     Token(TokenAsset),
     Stake(StakeAsset),
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct TokenAsset {
     pub kind: CosmosTokenKind,
     pub amount: u64,
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct StakeAsset {
     pub validator_name: String,
     pub address: Pubkey,
+    pub amount: u64,
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub enum CosmosTokenKind {
     Atom,
 }
@@ -49,7 +50,8 @@ fn can_deserialize() {
           {
             "type": "Stake",
             "validator_name": "ValidatorOne",
-            "address": "11111111111111111"
+            "address": "11111111111111111",
+            "amount": 4321
           }
       ]
   }"#;
@@ -71,6 +73,7 @@ fn can_serialize() {
             CosmosAsset::Stake(StakeAsset {
                 validator_name: "Validator".into(),
                 address: "11111111111".into(),
+                amount: 4321,
             }),
         ],
     };
