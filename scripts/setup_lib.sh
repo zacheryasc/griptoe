@@ -3,7 +3,7 @@
 build-packages() {
 	sudo apt update
 	sudo apt install --assume-yes build-essential
-	sudo apt install --assume-yes git clang curl libssl-dev llvm libudev-dev make protobuf-compiler
+	sudo apt install --assume-yes git clang curl libssl-dev llvm libudev-dev make protobuf-compiler gcc
 }
 
 rust-setup() {
@@ -14,3 +14,19 @@ rust-setup() {
 	source $HOME/.cargo/env
 }
 
+## WARNING: modifies your bash profile
+go-setup() {
+	set +e
+	mkdir build
+	set -e
+
+	curl -OL https://golang.org/dl/go1.18.2.linux-amd64.tar.gz
+	sudo tar -C /usr/local -xvf go1.18.2.linux-amd64.tar.gz
+	rm go1.18.2.linux-amd64.tar.gz
+
+	cd ..
+	echo "# GO path vars"
+	echo "export PATH=$PATH:/usr/local/go/bin" &> .bashrc
+	. .bashrc
+	echo "export PATH=$PATH:$(go env GOPATH)/bin" &> .bashrc
+}

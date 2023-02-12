@@ -1,3 +1,4 @@
 .accounts
+build
 target/
 Cargo.lock

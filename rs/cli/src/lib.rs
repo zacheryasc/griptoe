@@ -22,6 +22,17 @@ pub fn run(cmd: Command) -> Result<()> {
     }
 }
 
+pub fn read_file_to_string<P: AsRef<std::path::Path>>(path: P) -> Result<String> {
+    let mut buf = String::new();
+    std::fs::OpenOptions::new()
+        .read(true)
+        .open(path)
+        .map(|mut f| std::io::Read::read_to_string(&mut f, &mut buf))
+        .map_err(Error::Io)??;
+
+    Ok(buf)
+}
+
 #[derive(Debug, Error)]
 pub enum Error {
     #[error(transparent)]

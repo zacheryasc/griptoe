@@ -9,10 +9,14 @@ system-setup() {
 	scripts/system_setup.sh
 }
 
+build-external() {
+    echo "Installing external binaries..." > /dev/tty
+    scripts/build_external_libs.sh
+}
+
 rust-cli() {
     cargo run $@
 }
-
 
 if (return 0 2>/dev/null); then
     echo sourced

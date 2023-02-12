@@ -10,4 +10,4 @@ set -uexo pipefail
 
 build-packages
 rust-setup
-
+go-setup
