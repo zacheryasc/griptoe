@@ -3,6 +3,13 @@
 # Entrypoint for interaction with the monorepo
 #
 
+# Full build
+build-full() {
+    system-setup
+    build-external
+    build-local
+}
+
 # Setup for installing dependancies on a fresh system
 system-setup() {
 	echo "Running setup script..." > /dev/tty
@@ -12,6 +19,11 @@ system-setup() {
 build-external() {
     echo "Installing external binaries..." > /dev/tty
     scripts/build_external_libs.sh
+}
+
+build-local() {
+    echo "Building and packaging local binaries..." > /dev/tty
+    scripts/build_and_package.sh
 }
 
 rust-cli() {

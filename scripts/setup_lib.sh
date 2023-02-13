@@ -1,5 +1,7 @@
 #!this_is_supposed_to_be_sourced,_not_executed_directly
 
+GO_VER=1.18.2
+
 build-packages() {
 	sudo apt update
 	sudo apt install --assume-yes build-essential
@@ -17,16 +19,20 @@ rust-setup() {
 ## WARNING: modifies your bash profile
 go-setup() {
 	set +e
-	mkdir build
+	mkdir target
 	set -e
 
-	curl -OL https://golang.org/dl/go1.18.2.linux-amd64.tar.gz
-	sudo tar -C /usr/local -xvf go1.18.2.linux-amd64.tar.gz
-	rm go1.18.2.linux-amd64.tar.gz
+	curl -OL https://golang.org/dl/go$GO_VER.linux-amd64.tar.gz
+	sudo tar -C /usr/local -xvf go$GO_VER.linux-amd64.tar.gz
+	rm go$GO_VER.linux-amd64.tar.gz
 
-	cd ..
-	echo "# GO path vars"
-	echo "export PATH=$PATH:/usr/local/go/bin" &> .bashrc
-	. .bashrc
-	echo "export PATH=$PATH:$(go env GOPATH)/bin" &> .bashrc
+	LINE='export PATH=$PATH:/usr/local/go/bin'
+	SOURCE=/home/$USER/.bashrc
+	grep -qF -- "$LINE" "$SOURCE" || echo "$LINE" >> "$SOURCE"
+	. $SOURCE
+
+	LINE='export PATH=$PATH:$(go env GOPATH)/bin'
+	SOURCE=/home/$USER/.bashrc
+	grep -qF -- "$LINE" "$SOURCE" || echo "$LINE" >> "$SOURCE"
+	. $SOURCE
 }

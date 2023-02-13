@@ -7,9 +7,9 @@
 GAIA_VERSION="v7.1.1"
 
 build-gaiad() {
-    git clone -b $GAIA_VERSION https://github.com/cosmos/gaia.git build/gaia
-    cd build/gaia && make install
+    mkdir -p target
+    git clone -b $GAIA_VERSION https://github.com/cosmos/gaia.git target/gaia
+    cd target/gaia && make install
     cd ../..
 }
-
 build-gaiad
