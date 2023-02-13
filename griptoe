@@ -6,7 +6,9 @@
 # Full build
 build-full() {
     system-setup
+    . /home/$USER/.bashrc
     build-external
+    . /home/$USER/.bashrc
     package
 }
 

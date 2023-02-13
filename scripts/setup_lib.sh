@@ -5,7 +5,7 @@ GO_VER=1.18.2
 build-packages() {
 	sudo apt update
 	sudo apt install --assume-yes build-essential
-	sudo apt install --assume-yes git clang curl libssl-dev llvm libudev-dev make protobuf-compiler gcc
+	sudo apt install --assume-yes git clang curl libssl-dev llvm libudev-dev make protobuf-compiler gcc musl-dev
 }
 
 rust-setup() {
@@ -14,13 +14,12 @@ rust-setup() {
 	sh $(pwd)/rustup.sh -y
 	rm $(pwd)/rustup.sh
 	source $HOME/.cargo/env
+	rustup component add rust-std-x86_64-unknown-linux-musl
 }
 
 ## WARNING: modifies your bash profile
 go-setup() {
-	set +e
-	mkdir target
-	set -e
+	mkdir -p target
 
 	curl -OL https://golang.org/dl/go$GO_VER.linux-amd64.tar.gz
 	sudo tar -C /usr/local -xvf go$GO_VER.linux-amd64.tar.gz
@@ -32,7 +31,10 @@ go-setup() {
 	. $SOURCE
 
 	LINE='export PATH=$PATH:$(go env GOPATH)/bin'
-	SOURCE=/home/$USER/.bashrc
+	grep -qF -- "$LINE" "$SOURCE" || echo "$LINE" >> "$SOURCE"
+	. $SOURCE
+
+	LINE='export CGO_ENABLED=0'
 	grep -qF -- "$LINE" "$SOURCE" || echo "$LINE" >> "$SOURCE"
 	. $SOURCE
 }

@@ -2,8 +2,6 @@
 #
 # Fetches and builds external libraries
 
-. scripts/go_profile
-
 GAIA_VERSION="v7.1.1"
 
 build-gaiad() {
