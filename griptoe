@@ -7,7 +7,7 @@
 build-full() {
     system-setup
     build-external
-    build-local
+    package
 }
 
 # Setup for installing dependancies on a fresh system
@@ -21,7 +21,7 @@ build-external() {
     scripts/build_external_libs.sh
 }
 
-build-local() {
+package() {
     echo "Building and packaging local binaries..." > /dev/tty
     scripts/build_and_package.sh
 }
