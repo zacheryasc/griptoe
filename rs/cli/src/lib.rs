@@ -1,5 +1,5 @@
 use clap::Parser;
-use cmd::AccountCmd;
+use cmd::{AccountCmd, KeygenCmd};
 use thiserror::Error;
 
 mod account;
@@ -14,11 +14,16 @@ pub enum Command {
     /// Actions related to accounts
     #[clap(subcommand)]
     Account(AccountCmd),
+
+    /// Actions for deriving keys
+    #[clap(subcommand)]
+    Keygen(KeygenCmd),
 }
 
 pub fn run(cmd: Command) -> Result<()> {
     match cmd {
         Command::Account(cmd) => cmd.run(),
+        Command::Keygen(cmd) => cmd.run(),
     }
 }
 
@@ -40,6 +45,15 @@ pub enum Error {
 
     #[error(transparent)]
     SerdeJson(#[from] serde_json::Error),
+
+    #[error(transparent)]
+    Hex(#[from] hex::FromHexError),
+
+    #[error("bip39 related error. Msg: {0}")]
+    Bip39(String),
+
+    #[error("Failed to parse input. Msg: {0}")]
+    Parse(String),
 }
 
 pub type Result<T> = std::result::Result<T, Error>;

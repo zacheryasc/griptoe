@@ -4,6 +4,7 @@ use crate::{account::CosmosAccount, read_file_to_string, Result, DEFAULT_ACCOUNT
 
 #[derive(Debug, Parser)]
 pub enum AccountCmd {
+    /// Display all accounts
     Display,
 }
 
