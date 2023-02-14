@@ -43,8 +43,8 @@ pub struct HashOpts {
     pub repetitions: Option<u64>,
 
     /// Prompt the user to supply an additional string to append when hashing
-    #[clap(long, short = 'a', default_value_t = false)]
-    pub add_string: bool,
+    #[clap(long, short = 'a')]
+    pub add_string: Option<String>,
 
     /// The hash function to apply to the input. Potential functions include:
     ///
@@ -118,6 +118,15 @@ pub enum HashFunction {
     Blake2s256,
 }
 
+impl HashFunction {
+    pub fn apply(&self, bytes: &[u8]) -> Vec<u8> {
+        match self {
+            Self::Sha256 => apply_sha(bytes),
+            Self::Blake2s256 => apply_blake2s(bytes),
+        }
+    }
+}
+
 impl FromStr for HashFunction {
     type Err = Error;
     fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
@@ -157,20 +166,13 @@ fn process_hash(opts: HashOpts) -> Result<()> {
             .to_vec(),
     };
 
-    if opts.add_string {
-        println!("Please enter additional string: ");
-        let buf = &mut String::new();
-        std::io::stdin().read_line(buf)?;
-        input.extend(buf.as_bytes());
+    if let Some(s) = opts.add_string {
+        input.extend_from_slice(s.as_bytes());
     }
 
-    let hash_fn = |bytes: &[u8]| match opts.function {
-        HashFunction::Sha256 => apply_sha(bytes),
-        HashFunction::Blake2s256 => apply_blake2s(bytes),
-    };
     let mut hash_bytes = input;
     for _ in 0..opts.repetitions.unwrap_or(1) {
-        hash_bytes = hash_fn(&hash_bytes);
+        hash_bytes = opts.function.apply(&hash_bytes);
     }
 
     let output = match opts.output_fmt {
@@ -182,7 +184,9 @@ fn process_hash(opts: HashOpts) -> Result<()> {
             mnemonic.phrase().to_string()
         }
     };
+
     println!("{output}");
+
     Ok(())
 }
 

@@ -4,11 +4,6 @@ Monorepo containing tools and scripts for managing crypto assets. Intended to be
 ## Usage
 This library is intended to be run from the inside of a fresh debian box. Run these scripts on your personal machine at your own peril
 
-### Build an exportable set of binaries on a fresh machine
-run
-```
-./griptoe build-full
-```
 
 ### Setup
 run the setup script
