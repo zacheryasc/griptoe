@@ -10,4 +10,11 @@ build-gaiad() {
     cd target/gaia && make install
     cd ../..
 }
+
+build-geth() {
+    git clone https://github.com/ethereum/go-ethereum.git target/geth
+    cd target/geth && make all
+    cd ../..
+}
 build-gaiad
+build-geth
