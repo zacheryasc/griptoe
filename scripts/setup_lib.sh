@@ -5,7 +5,7 @@ GO_VER=1.18.2
 build-packages() {
 	sudo apt update
 	sudo apt install --assume-yes build-essential
-	sudo apt install --assume-yes git clang curl libssl-dev llvm libudev-dev make protobuf-compiler gcc musl-dev
+	sudo apt install --assume-yes git clang curl libssl-dev llvm libudev-dev make protobuf-compiler gcc musl-dev tree
 }
 
 rust-setup() {
@@ -37,4 +37,20 @@ go-setup() {
 	LINE='export CGO_ENABLED=0'
 	grep -qF -- "$LINE" "$SOURCE" || echo "$LINE" >> "$SOURCE"
 	. $SOURCE
+}
+
+python-setup() {
+	wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+	chmod +x Miniconda3-latest-Linux-x86_64.sh
+	./Miniconda3-latest-Linux-x86_64.sh -b || true
+	rm Miniconda3-latest-Linux-x86_64.sh
+
+	LINE='export PATH=$PATH:/home/$USER/miniconda3/bin'
+	SOURCE=/home/$USER/.bashrc
+	grep -qF -- "$LINE" "$SOURCE" || echo "$LINE" >> "$SOURCE"
+	. $SOURCE
+
+	conda create --name griptoe-env python=3.6.7
+	conda activate myenv
+	conda install -y pillow pip
 }
