@@ -1,6 +1,6 @@
 use clap::Parser;
 
-use crate::{account::CosmosAccount, read_file_to_string, Result, DEFAULT_ACCOUNTS_PATH};
+use crate::{account::CosmosAccount, config::Config, read_file_to_string, Result};
 
 #[derive(Debug, Parser)]
 pub enum AccountCmd {
@@ -9,15 +9,15 @@ pub enum AccountCmd {
 }
 
 impl AccountCmd {
-    pub fn run(self) -> Result<()> {
+    pub fn run(self, cfg: Config) -> Result<()> {
         match self {
-            Self::Display => display_accounts(),
+            Self::Display => display_accounts(cfg.accounts_path),
         }
     }
 }
 
-fn display_accounts() -> Result<()> {
-    let json = read_file_to_string(format!("{}/cosmos.json", DEFAULT_ACCOUNTS_PATH.to_owned()))?;
+fn display_accounts(path: String) -> Result<()> {
+    let json = read_file_to_string(path)?;
     let accounts: Vec<CosmosAccount> = serde_json::from_str(&json)?;
 
     for account in accounts {

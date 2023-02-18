@@ -4,9 +4,17 @@ use thiserror::Error;
 
 mod account;
 mod cmd;
+mod config;
 
-lazy_static::lazy_static! {
-    pub static ref DEFAULT_ACCOUNTS_PATH: String = format!("{}/.accounts", shellexpand::env("$PWD").unwrap());
+pub static DEFAULT_CONFIG_PATH: &str = "config.toml";
+
+#[derive(Debug, Parser)]
+pub struct Cli {
+    #[clap(subcommand)]
+    pub command: Command,
+
+    #[clap(long, short = 'p')]
+    pub config_path: Option<String>,
 }
 
 #[derive(Debug, Parser)]
@@ -20,9 +28,10 @@ pub enum Command {
     Keygen(KeygenCmd),
 }
 
-pub fn run(cmd: Command) -> Result<()> {
-    match cmd {
-        Command::Account(cmd) => cmd.run(),
+pub fn run(cli: Cli) -> Result<()> {
+    let config = config::Config::parse(cli.config_path.unwrap_or(DEFAULT_CONFIG_PATH.into()))?;
+    match cli.command {
+        Command::Account(cmd) => cmd.run(config),
         Command::Keygen(cmd) => cmd.run(),
     }
 }
@@ -48,6 +57,9 @@ pub enum Error {
 
     #[error(transparent)]
     Hex(#[from] hex::FromHexError),
+
+    #[error(transparent)]
+    TomlDeserializer(#[from] toml::de::Error),
 
     #[error("bip39 related error. Msg: {0}")]
     Bip39(String),
