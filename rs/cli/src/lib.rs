@@ -1,39 +1,33 @@
 use clap::Parser;
-use cmd::{AccountCmd, KeygenCmd};
+use cmd::KeygenCmd;
 use thiserror::Error;
 
-mod account;
+// mod account;
 mod cmd;
-mod config;
-
-pub static DEFAULT_CONFIG_PATH: &str = "config.toml";
+// mod config;
 
 #[derive(Debug, Parser)]
 pub struct Cli {
     #[clap(subcommand)]
-    pub command: Command,
+    pub command: KeygenCmd,
 
     #[clap(long, short = 'p')]
     pub config_path: Option<String>,
 }
 
-#[derive(Debug, Parser)]
-pub enum Command {
-    /// Actions related to accounts
-    #[clap(subcommand)]
-    Account(AccountCmd),
+// #[derive(Debug, Parser)]
+// pub enum Command {
+//     /// Actions related to accounts
+//     #[clap(subcommand)]
+//     Account(AccountCmd),
 
-    /// Actions for deriving keys
-    #[clap(subcommand)]
-    Keygen(KeygenCmd),
-}
+//     /// Actions for deriving keys
+//     #[clap(subcommand)]
+//     Keygen(KeygenCmd),
+// }
 
 pub fn run(cli: Cli) -> Result<()> {
-    let config = config::Config::parse(cli.config_path.unwrap_or(DEFAULT_CONFIG_PATH.into()))?;
-    match cli.command {
-        Command::Account(cmd) => cmd.run(config),
-        Command::Keygen(cmd) => cmd.run(),
-    }
+    cli.command.run()
 }
 
 pub fn read_file_to_string<P: AsRef<std::path::Path>>(path: P) -> Result<String> {
