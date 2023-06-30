@@ -20,7 +20,7 @@ system-setup() {
 
 build-external() {
     echo "Installing external binaries..." > /dev/tty
-    scripts/build_external_libs.sh
+    scripts/build_external_libs.sh build-all
 }
 
 package() {

@@ -66,3 +66,9 @@ setup-all() {
     rust-setup
     go-setup
 }
+
+if (return 0 2>/dev/null); then
+    echo sourced
+else
+    $@
+fi

@@ -16,3 +16,4 @@ cp target/x86_64-unknown-linux-musl/debug/main build/griptoe-cli
 GAIAD_PATH=$(which gaiad)
 cp $GAIAD_PATH build/bin/gaiad
 cp target/geth/build/bin/geth build/bin/geth
+cp target/geth/build/bin/clef build/bin/clef
